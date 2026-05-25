@@ -1,14 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-
+const cookie= require("cookie-parser")
 const connectDb = require("./src/config/db");
 const ResumeRouter = require("./src/routers/resumeReport.routes");
+const authRouter= require("./src/routers/auth.router")
 const upload = require("./src/config/uploadsFile")
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookie())
 app.use("/resume", ResumeRouter);
+app.use("/auth",authRouter)
 app.post(
   "/test",
   upload.single("file"),
