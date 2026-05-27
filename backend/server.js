@@ -5,7 +5,7 @@ const cookie= require("cookie-parser")
 const connectDb = require("./src/config/db");
 const ResumeRouter = require("./src/routers/resumeReport.routes");
 const authRouter= require("./src/routers/auth.router")
-const upload = require("./src/config/uploadsFile")
+const upload = require("./src/middleware/uploadsFile")
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookie())

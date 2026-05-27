@@ -1,10 +1,11 @@
- const uploads = require("../config/uploadsFile")
+ const uploads = require("../middleware/uploadsFile")
 const {postResumeReport,getTopCandidateResume,veiwResumeReport} = require("../controller/resumeReport.controller")
  
  const express = require("express")
+const { authMiddleware } = require("../middleware/authMiddleware")
  const router = express.Router()
 
-router.post("/report",uploads.single("file"), postResumeReport)
+router.post("/report", authMiddleware ,uploads.array("files",20), postResumeReport)
 router.get("/topCandidate",getTopCandidateResume)
 router.get("/viewResume/id",veiwResumeReport)
 

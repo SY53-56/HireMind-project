@@ -4,12 +4,19 @@ const genAI = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-const prepareResumeReport = async (resumeText, jobDescription) => {
+const prepareResumeReport = async ({resumeText, jobDescription}) => {
   try {
-    const prompt = `
-You are an AI HR assistant.
+   const prompt = `
+You are an expert HR recruiter.
 
-Analyze this resume against the job description.
+Compare the resume with the job description carefully.
+
+Give realistic scoring.
+
+Rules:
+- skill should match and their requirement = higher score
+- Missing frontend skills = lower score
+- Freshers allowed
 
 Job Description:
 ${jobDescription}
@@ -26,12 +33,33 @@ Return ONLY valid JSON:
 }
 `;
 
-    const response = await genAI.models.generateContent({
+
+    const response =
+      await genAI.models.generateContent({
+
       model: "gemini-2.5-flash",
+
       contents: prompt,
     });
-console.log(response.text)
-    return response.text;
+
+    const text = response.text;
+
+    console.log("AI RAW:", text);
+
+    // Extract JSON safely
+    const jsonMatch =
+      text.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error(
+        "No valid JSON found"
+      );
+    }
+
+    const parsed =
+      JSON.parse(jsonMatch[0]);
+
+    return parsed;
   } catch (e) {
     console.error("Gemini Error:", e);
     throw e;

@@ -3,44 +3,83 @@ const pdfParse = require("pdf-parse/lib/pdf-parse");
 const prepareResumeReport = require("../services/aiService");
 const generatePdf = require("../config/genratePdf");
 
+
+const delay = (ms)=>{
+  return new Promise(resolve=> setTimeout(resolve, ms))
+}
 const postResumeReport = async (req, res) => {
   const { jobDescription } = req.body;
    
   try {
    
-    if (!req.file) {
+    if (!req.files) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const file = req.file;
+    const files = req.files;
 console.log("BODY:", req.body);
-console.log("FILE:", req.file);
+console.log("FILE:", req.files);
     // Extract text from PDF
-    const pdfData = await pdfParse(file.buffer);
-    const resumeText = pdfData.text;
+    let result= []
+    for(let file of files){
+ try {
+  
+    const pdfData =
+      await pdfParse(file.buffer);
+           await delay(4000);
 
-    // AI processing
-    const resumeReport = await prepareResumeReport({
-      jobDescription,
-      resumeText,
-    });
+console.log( "gdagfjkaslkdfjlkasj", pdfData.text);
+    const resumeText =
+      pdfData.text;
 
-    if (!resumeReport) {
-      return res.status(500).json({ message: "AI processing failed" });
+    const resumeReport =
+      await prepareResumeReport({
+        jobDescription,
+        resumeText,
+      });
+console.log("files data", resumeText)
+    const prepareResume =
+      await ResumeReportModel.create({
+
+        jobDescription,
+
+        resumeFile:
+          file.originalname,
+
+        resumeScore:
+          resumeReport.resumeScore,
+
+        rank:
+          resumeReport.rank,
+
+        topCandidate:
+          resumeReport.topCandidate,
+
+        status:
+          resumeReport.topCandidate
+            ? "selected"
+            : "pending",
+      });
+
+    result.push(prepareResume);
+
+  } catch (err) {
+
+    console.log(
+      "PDF ERROR:",
+      file.originalname,
+       err.message
+    );
+
+    console.log(err.message);
+
+  }
+  
     }
-console.log(  "ai",resumeReport)
-    // Save to DB
-    const prepareResume = await ResumeReportModel.create({
-      jobDescription,
-      resumeFile:file.originalname,
-      resumeScore: resumeReport.resumeScore,
-      rank: resumeReport.rank,
-      topCandidate: resumeReport.topCandidate,
-    });
 
     return res.status(200).json({
       message: "Resume checked successfully",
-      data: prepareResume,
+      data: result,
     });
 
   } catch (e) {

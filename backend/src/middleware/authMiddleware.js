@@ -6,7 +6,7 @@ const authMiddleware= async(req,res,next)=>{
    if(!token){
     res.status(400).json({message:"token invaild"})
    }
-   const decode = jwt.verify(token,process.env.JWT_SECERT)
+   const decode = jwt.verify(token,process.env.JWT_SECRET)
    user= req.decode
    next()
   }catch(e){
