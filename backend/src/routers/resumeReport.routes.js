@@ -5,7 +5,7 @@ const {postResumeReport,getTopCandidateResume,veiwResumeReport} = require("../co
 const { authMiddleware } = require("../middleware/authMiddleware")
  const router = express.Router()
 
-router.post("/report", authMiddleware ,uploads.array("files",20), postResumeReport)
+router.post("/report", authMiddleware ,uploads.array("files",100), postResumeReport)
 router.get("/topCandidate",getTopCandidateResume)
 router.get("/viewResume/id",veiwResumeReport)
 

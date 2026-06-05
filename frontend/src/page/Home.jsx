@@ -1,6 +1,9 @@
+import Box from "../components/box";
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <section className="flex justify-center py-20 items-center">
+       <Box/>
+    </section>
   )
 }

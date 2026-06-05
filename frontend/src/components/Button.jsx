@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {Link} from "react-router-dom"
 export default function Button({name, onClick,type="submit",className,to }) {
      if(to){
@@ -7,6 +7,6 @@ export default function Button({name, onClick,type="submit",className,to }) {
         )
      }
      return (
-        <button onClick={onClick} type={type}className={`${className} cursor-pointer`}>{name}</button>
+        <button onClick={onClick} type={type}className={`${className} cursor-pointer transition-all duration-500`}>{name}</button>
      )
 }
