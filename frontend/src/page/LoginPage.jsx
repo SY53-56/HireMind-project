@@ -1,8 +1,16 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { Link } from 'react-router-dom'
 export default function LoginPage() {
+  const [form, setForm] = useState({
+    email:"",
+    password:""
+  })
+  const handleChange= (e)=>{
+  const {name, value} = e.target
+  setForm(prev=> ({...prev, [name]:value}) )
+}
   return (
     <section className='min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-cyan-100 flex items-center justify-center px-4 py-10'>
       <div className='relative max-w-3xl w-full'>
@@ -17,8 +25,8 @@ export default function LoginPage() {
           </div>
 
           <div className='space-y-5'>
-            <Input type='email' name='email' id='email' label='Email' placeholder='Enter your email' />
-            <Input type='password' name='password' id='password' label='Password' placeholder='Enter your password' />
+            <Input type='email' name='email' id='email' value={form.email} onChange={handleChange} label='Email' placeholder='Enter your email' />
+            <Input type='password' name='password' id='password' label='Password' value={form.password} onChange={handleChange} placeholder='Enter your password' />
             <Button type='submit' name='Login' className='bg-cyan-600 hover:bg-cyan-700 text-white w-full py-3 rounded-2xl transition-colors duration-200 shadow-sm shadow-cyan-200/50' />
           </div>
 
