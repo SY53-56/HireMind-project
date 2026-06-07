@@ -25,7 +25,7 @@ const authlogin = createAsyncThunk("login",async(user,{ rejectWithValue })=>{
       );
   }
 })
-const authlogout = createAsyncThunk("logout",async({ rejectWithValue })=>{
+const authlogout = createAsyncThunk("logout",async( _,{ rejectWithValue })=>{
   try{
    const res= await API.get(`/auth/logout`)
     return res.data

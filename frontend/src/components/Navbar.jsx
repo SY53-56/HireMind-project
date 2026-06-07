@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
 import Button from './Button'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { authlogout } from '../features/auth/authThunk'
+import { useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 const {user} = useSelector(state=> state.auth)
+const navigate =useNavigate()
+const dispatch = useDispatch()
+console.log("user", user)
+const handleLogout = async () => {
+  try {
+    await dispatch(authlogout()).unwrap();
+     navigate("/")
+    console.log("success");
+  } catch (e) {
+    console.log(e);
+  }
+};
   return (
     <nav className='w-full bg-gradient-to-r from-slate-950 via-indigo-950 to-cyan-900 shadow-2xl shadow-cyan-900/25'>
       <div className='mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-10'>
@@ -34,9 +48,9 @@ const {user} = useSelector(state=> state.auth)
             <Button name='Home' to='/' className='w-full rounded-full bg-white/10 px-4 py-2 text-white border border-white/20 text-left hover:bg-white/15 transition lg:w-auto lg:text-center' />
             <Button name='Dashboard' to='/dashboard' className='w-full rounded-full bg-cyan-500 px-4 py-2 text-white hover:bg-cyan-400 transition lg:w-auto' />
          {user?(
-             <div>
-              <h1>{user.username}</h1>
-               <Button to="/login" name='Logout' className='w-full rounded-full bg-amber-500 px-4 py-2 text-slate-950 font-semibold hover:bg-amber-400 transition lg:w-auto' />
+             <div className='flex flex-col lg:flex-row gap-4 items-center'>
+              <h1 className='text-white'>{user?.user?.username}</h1>
+               <Button  onClick={handleLogout} name='Logout' className='w-full rounded-full bg-amber-500 px-4 py-2 text-slate-950 font-semibold hover:bg-amber-400 transition lg:w-auto' />
               
              </div>
          ):(
